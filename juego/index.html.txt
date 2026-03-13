@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mage Legend</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="start-screen">
+        <div class="menu-box">
+            <h1>MAGE LEGEND</h1>
+            <p>Domina las runas y derrota al Dragón</p>
+            <button class="play-btn" onclick="startGame()">¡JUGAR!</button>
+        </div>
+    </div>
+    <div id="game-container">
+        <div id="ui-layer">
+            <div class="stats-row">
+                <div class="stat-card">? <span id="score">0</span></div>
+                <div class="stat-card">?? <span id="coins">0</span></div>
+                <div class="stat-card">?? <span id="shards">0</span></div>
+            </div>
+            <div id="level-badge">NIVEL 1</div>
+        </div>
+        <div id="battle-view">
+            <div id="background-layer"></div>
+            <div id="enemy-ui">
+                <div id="enemy-name">ESPECTRO</div>
+                <div class="hp-bar-bg"><div id="enemy-hp-fill"></div></div>
+            </div>
+            <canvas id="canvas-battle"></canvas>
+        </div>
+        <div id="rune-view">
+            <canvas id="canvas-runes"></canvas>
+        </div>
+        <div id="bottom-panel">
+            <div class="tabs">
+                <button onclick="showTab('upgrades')">?? MEJORAS</button>
+                <button onclick="showTab('forge')">?? FORJA</button>
+            </div>
+            <div id="tab-upgrades" class="tab-content">
+                <button class="upgrade-btn" onclick="buy('dmg')"><b>Mejorar Daño</b> | ?? 50</button>
+                <button class="upgrade-btn" onclick="buy('pet')"><b>Comprar Búho</b> | ?? 200</button>
+            </div>
+            <div id="tab-forge" class="tab-content" style="display:none">
+                <button class="upgrade-btn" onclick="craft('robe_shadow')"><b>Túnica Sombría</b> | ?? 50</button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

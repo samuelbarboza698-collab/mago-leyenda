@@ -1,0 +1,66 @@
+const cvsB = document.getElementById("canvas-battle");
+const ctxB = cvsB.getContext("2d");
+const cvsR = document.getElementById("canvas-runes");
+const ctxR = cvsR.getContext("2d");
+let game = { score: 0, coins: 0, shards: 0, level: 1, damage: 40, frame: 0, pets: 0, equipped: { robe: 'default' }, runes: [], active: false };
+let enemy = { name: "ESPECTRO", emoji: "??", hp: 100, maxHp: 100, isBoss: false };
+function startGame() { document.getElementById('start-screen').style.display = 'none'; game.active = true; resize(); update(); }
+function resize() { cvsB.width = cvsB.offsetWidth; cvsB.height = cvsB.offsetHeight; cvsR.width = cvsR.offsetWidth; cvsR.height = cvsR.offsetHeight; }
+function drawMage() {
+    let x = cvsB.width - 100, y = cvsB.height - 50;
+    let b = Math.sin(game.frame / 12) * 8; 
+    ctxB.save();
+    ctxB.fillStyle = game.equipped.robe === 'robe_shadow' ? "#111" : "#4a268a";
+    ctxB.beginPath(); ctxB.moveTo(x-45, y); ctxB.quadraticCurveTo(x, y-130+b, x+45, y); ctxB.fill();
+    ctxB.fillStyle = "#fff"; ctxB.beginPath(); ctxB.arc(x, y-65+b, 30, 0, Math.PI*2); ctxB.fill();
+    ctxB.fillStyle = "#00ffff"; ctxB.beginPath(); ctxB.arc(x-12, y-70+b, 7, 0, Math.PI*2); ctxB.arc(x+12, y-70+b, 7, 0, Math.PI*2); ctxB.fill();
+    if(game.pets > 0) { ctxB.font = "35px Arial"; ctxB.fillText("??", x - 70, y - 110 + Math.sin(game.frame/15)*12); }
+    ctxB.restore();
+}
+function drawEnemy() {
+    let x = cvsB.width/2, y = cvsB.height/2 + 40;
+    let bounce = Math.sin(game.frame/10) * 15;
+    ctxB.font = enemy.isBoss ? "120px Arial" : "90px Arial";
+    ctxB.textAlign = "center";
+    ctxB.fillText(enemy.emoji, x, y + bounce);
+}
+function update() {
+    if(!game.active) return;
+    game.frame++;
+    ctxB.clearRect(0,0,cvsB.width, cvsB.height);
+    ctxR.clearRect(0,0,cvsR.width, cvsR.height);
+    drawEnemy();
+    drawMage();
+    game.runes.forEach((r, i) => {
+        r.y += 4;
+        ctxR.fillStyle = r.color;
+        ctxR.beginPath(); ctxR.arc(r.x, r.y, 22, 0, Math.PI*2); ctxR.fill();
+        if(r.y > cvsR.height) game.runes.splice(i, 1);
+    });
+    document.getElementById("score").innerText = game.score;
+    document.getElementById("coins").innerText = game.coins;
+    document.getElementById("shards").innerText = game.shards;
+    document.getElementById("enemy-hp-fill").style.width = (enemy.hp / enemy.maxHp * 100) + "%";
+    requestAnimationFrame(update);
+}
+cvsR.addEventListener("mousedown", (e) => {
+    let rect = cvsR.getBoundingClientRect();
+    let x = e.clientX - rect.left, y = e.clientY - rect.top;
+    game.runes.forEach((r, i) => {
+        if(Math.hypot(x-r.x, y-r.y) < 45) {
+            game.runes.splice(i, 1);
+            enemy.hp -= game.damage; game.coins += 10;
+            if(Math.random() > 0.6) game.shards++;
+            if(enemy.hp <= 0) { 
+                game.level++; enemy.hp = 100 * game.level; enemy.maxHp = enemy.hp;
+                enemy.isBoss = game.level % 5 === 0;
+                enemy.emoji = enemy.isBoss ? "??" : "??";
+                document.getElementById("enemy-name").innerText = enemy.isBoss ? "DRAGÓN JEFE" : "ESQUELETO";
+            }
+        }
+    });
+});
+setInterval(() => { if(game.active) game.runes.push({ x: Math.random()*(cvsR.width-80)+40, y: -30, color: '#00ffff' }); }, 1000);
+function showTab(id) { document.getElementById("tab-upgrades").style.display = id === 'upgrades' ? 'block' : 'none'; document.getElementById("tab-forge").style.display = id === 'forge' ? 'block' : 'none'; }
+function buy(t) { if(t==='dmg'&&game.coins>=50){game.coins-=50;game.damage+=25;} if(t==='pet'&&game.coins>=200){game.coins-=200;game.pets++;} }
+function craft(i) { if(i==='robe_shadow'&&game.shards>=50){game.shards-=50;game.equipped.robe='robe_shadow';game.damage*=2;} }
