@@ -3,47 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mage Titan</title>
+    <title>Mage Titan: Evolution</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <div id="game-container">
-        <header>
-            <div class="stage-info">ETAPA <span id="stage-num">1</span></div>
-            <div class="gold-display">🪙 <span id="gold-count">0</span></div>
+<body onclick="spawnParticle(event)">
+    <div id="game-app">
+        <div id="flash-overlay"></div>
+
+        <header class="game-header">
+            <div class="header-left">
+                <span class="stage-tag">ETAPA <span id="stage-num">1</span></span>
+            </div>
+            <div class="gold-container">
+                <img src="https://cdn-icons-png.flaticon.com/512/272/272525.png" width="25">
+                <span id="gold-count">0</span>
+            </div>
         </header>
 
-        <section id="battle-field">
-            <div id="enemy-health-bar"><div id="hp-progress"></div></div>
-            <div id="enemy-name">ESPECTRO NIV. 1</div>
-            
-            <div id="boss-container">
-                <div id="enemy-sprite">👿</div>
-                <div id="damage-numbers"></div> </div>
+        <section id="world">
+            <div id="enemy-ui">
+                <div class="hp-wrapper">
+                    <div id="hp-progress"></div>
+                    <span id="hp-text">100 / 100</span>
+                </div>
+                <h2 id="enemy-name">GUARDIÁN DE PIEDRA</h2>
+            </div>
 
-            <div id="player-team">
-                <div class="hero">🧙‍♂️</div>
-                <div id="pet" style="display:none">🦉</div>
+            <div id="battle-area">
+                <div id="pet-area">
+                    <div class="pet-entity" id="main-pet">🐉</div>
+                </div>
+                <div id="boss-sprite" onclick="handleTap(event)">👿</div>
+                <div id="effects-layer"></div>
+            </div>
+
+            <div id="skills-bar">
+                <div class="skill-slot" onclick="activateSkill('frenzy')">🔥<div class="cooldown" id="cd-1"></div></div>
+                <div class="skill-slot" onclick="activateSkill('storm')">⚡<div class="cooldown" id="cd-2"></div></div>
             </div>
         </section>
 
-        <section id="upgrade-panel">
-            <div class="tab-menu">
-                <button class="active">PERSONAJE</button>
-                <button>EQUIPO</button>
-                <button>ARTEFACTOS</button>
+        <nav id="bottom-menu">
+            <div class="menu-tabs">
+                <button class="tab-btn active" onclick="switchTab('heroes')">HÉROE</button>
+                <button class="tab-btn" onclick="switchTab('pets')">MASCOTAS</button>
+                <button class="tab-btn" onclick="switchTab('stats')">STATS</button>
             </div>
-            <div class="upgrade-list">
-                <div class="upgrade-item" onclick="upgradeClick()">
-                    <div class="up-icon">🪄</div>
-                    <div class="up-info">
-                        <span class="up-name">Daño de Click</span>
-                        <span class="up-cost">🪙 <span id="up-cost-val">10</span></span>
-                    </div>
-                    <div class="up-level">Nv. <span id="click-lv">1</span></div>
+            <div class="scroll-content" id="upgrade-list">
                 </div>
-                </div>
-        </section>
+        </nav>
     </div>
     <script src="script.js"></script>
 </body>
