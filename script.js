@@ -1,53 +1,40 @@
-const cvsB = document.getElementById("canvas-battle");
-const ctxB = cvsB.getContext("2d");
-const cvsR = document.getElementById("canvas-runes");
-const ctxR = cvsR.getContext("2d");
-let game = { score: 0, coins: 0, damage: 40, runes: [], active: false };
-let enemy = { hp: 100, maxHp: 100 };
+:root { --gold: #f39c12; --bg-dark: #121212; }
+body { margin: 0; background: #000; font-family: 'Arial Black', sans-serif; color: white; overflow: hidden; }
 
-function startGame() { 
-    document.getElementById('start-screen').style.display = 'none'; 
-    game.active = true; 
-    resize(); 
-    update(); 
+#game-container { height: 100vh; display: flex; flex-direction: column; }
+
+header { padding: 10px; background: rgba(0,0,0,0.8); text-align: center; border-bottom: 2px solid #333; }
+.gold-display { font-size: 1.5rem; color: var(--gold); }
+.stage-info { font-size: 0.8rem; color: #aaa; }
+
+#battle-field { flex: 1.2; position: relative; background: linear-gradient(to bottom, #1a1a2e, #16213e); overflow: hidden; }
+
+/* Barra de Vida estilo Tap Titans */
+#enemy-health-bar { width: 80%; height: 20px; background: #333; margin: 20px auto 5px; border-radius: 10px; border: 2px solid #fff; overflow: hidden; }
+#hp-progress { width: 100%; height: 100%; background: linear-gradient(to right, #e74c3c, #c0392b); transition: width 0.1s; }
+
+#boss-container { height: 60%; display: flex; align-items: center; justify-content: center; position: relative; }
+#enemy-sprite { font-size: 120px; transition: transform 0.05s; z-index: 1; }
+
+/* Números de Daño Animados */
+.dmg-num { position: absolute; color: white; font-weight: bold; font-size: 24px; pointer-events: none; animation: floatUp 0.6s ease-out forwards; z-index: 5; }
+@keyframes floatUp {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(-100px); opacity: 0; }
 }
 
-function resize() {
-    cvsB.width = cvsB.offsetWidth; cvsB.height = cvsB.offsetHeight;
-    cvsR.width = cvsR.offsetWidth; cvsR.height = cvsR.offsetHeight;
-}
+#player-team { position: absolute; bottom: 10px; width: 100%; display: flex; justify-content: center; gap: 20px; font-size: 40px; }
 
-function update() {
-    if(!game.active) return;
-    ctxB.clearRect(0,0,cvsB.width, cvsB.height);
-    ctxR.clearRect(0,0,cvsR.width, cvsR.height);
-    
-    // Dibujar Enemigo (un círculo simple para probar)
-    ctxB.fillStyle = "white"; ctxB.font = "80px Arial"; ctxB.textAlign = "center";
-    ctxB.fillText("👻", cvsB.width/2, cvsB.height/2);
+/* Panel de Mejoras */
+#upgrade-panel { flex: 1; background: #1e1e1e; border-top: 4px solid #333; display: flex; flex-direction: column; }
+.tab-menu { display: flex; background: #111; }
+.tab-menu button { flex: 1; padding: 10px; background: none; border: none; color: #666; font-size: 0.7rem; border-bottom: 2px solid transparent; }
+.tab-menu button.active { color: var(--gold); border-bottom: 2px solid var(--gold); }
 
-    // Dibujar Runas
-    game.runes.forEach((r, i) => {
-        r.y += 3;
-        ctxR.fillStyle = "cyan"; ctxR.beginPath(); ctxR.arc(r.x, r.y, 25, 0, Math.PI*2); ctxR.fill();
-        if(r.y > cvsR.height) game.runes.splice(i, 1);
-    });
-
-    document.getElementById("score").innerText = game.score;
-    document.getElementById("coins").innerText = game.coins;
-    document.getElementById("hp-fill").style.width = (enemy.hp/enemy.maxHp*100) + "%";
-    requestAnimationFrame(update);
-}
-
-cvsR.onmousedown = (e) => {
-    let rect = cvsR.getBoundingClientRect();
-    let x = e.clientX - rect.left; let y = e.clientY - rect.top;
-    game.runes.forEach((r, i) => {
-        if(Math.hypot(x-r.x, y-r.y) < 30) {
-            game.runes.splice(i, 1); game.score++; enemy.hp -= 20;
-            if(enemy.hp <= 0) enemy.hp = 100;
-        }
-    });
-};
-
-setInterval(() => { if(game.active) game.runes.push({x: Math.random()*cvsR.width, y: -20}); }, 1000);
+.upgrade-list { overflow-y: auto; padding: 10px; }
+.upgrade-item { display: flex; align-items: center; background: #2c3e50; padding: 10px; border-radius: 8px; margin-bottom: 8px; border: 1px solid #444; }
+.up-icon { font-size: 30px; margin-right: 15px; }
+.up-info { flex: 1; display: flex; flex-direction: column; }
+.up-name { font-size: 0.9rem; }
+.up-cost { color: var(--gold); font-size: 0.8rem; }
+.up-level { font-weight: bold; background: rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 5px; }
