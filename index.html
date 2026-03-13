@@ -2,25 +2,48 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mage Legend</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mage Titan</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="start-screen">
-        <h1>MAGE LEGEND</h1>
-        <button onclick="startGame()">¡JUGAR!</button>
-    </div>
     <div id="game-container">
-        <div id="ui">✨ <span id="score">0</span> | 🪙 <span id="coins">0</span></div>
-        <div id="enemy-ui">
-            <div id="enemy-name">ESPECTRO</div>
-            <div style="width:200px; height:10px; background:#222; margin:auto;">
-                <div id="hp-fill" style="width:100%; height:100%; background:red;"></div>
+        <header>
+            <div class="stage-info">ETAPA <span id="stage-num">1</span></div>
+            <div class="gold-display">🪙 <span id="gold-count">0</span></div>
+        </header>
+
+        <section id="battle-field">
+            <div id="enemy-health-bar"><div id="hp-progress"></div></div>
+            <div id="enemy-name">ESPECTRO NIV. 1</div>
+            
+            <div id="boss-container">
+                <div id="enemy-sprite">👿</div>
+                <div id="damage-numbers"></div> </div>
+
+            <div id="player-team">
+                <div class="hero">🧙‍♂️</div>
+                <div id="pet" style="display:none">🦉</div>
             </div>
-        </div>
-        <canvas id="canvas-battle"></canvas>
-        <canvas id="canvas-runes"></canvas>
+        </section>
+
+        <section id="upgrade-panel">
+            <div class="tab-menu">
+                <button class="active">PERSONAJE</button>
+                <button>EQUIPO</button>
+                <button>ARTEFACTOS</button>
+            </div>
+            <div class="upgrade-list">
+                <div class="upgrade-item" onclick="upgradeClick()">
+                    <div class="up-icon">🪄</div>
+                    <div class="up-info">
+                        <span class="up-name">Daño de Click</span>
+                        <span class="up-cost">🪙 <span id="up-cost-val">10</span></span>
+                    </div>
+                    <div class="up-level">Nv. <span id="click-lv">1</span></div>
+                </div>
+                </div>
+        </section>
     </div>
     <script src="script.js"></script>
 </body>
