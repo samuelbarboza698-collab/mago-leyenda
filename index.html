@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mage Legend</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="start-screen">
+        <h1>MAGE LEGEND</h1>
+        <button onclick="startGame()">¡JUGAR!</button>
+    </div>
+    <div id="game-container">
+        <div id="ui">✨ <span id="score">0</span> | 🪙 <span id="coins">0</span></div>
+        <div id="enemy-ui">
+            <div id="enemy-name">ESPECTRO</div>
+            <div style="width:200px; height:10px; background:#222; margin:auto;">
+                <div id="hp-fill" style="width:100%; height:100%; background:red;"></div>
+            </div>
+        </div>
+        <canvas id="canvas-battle"></canvas>
+        <canvas id="canvas-runes"></canvas>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
