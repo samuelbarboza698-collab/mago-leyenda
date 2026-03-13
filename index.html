@@ -3,56 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mage Titan: Evolution</title>
+    <title>Mage Legend: Evolution</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body onclick="spawnParticle(event)">
-    <div id="game-app">
+<body>
+    <div id="game-container">
+        <div class="parallax-bg layer-1"></div>
+        <div class="parallax-bg layer-2"></div>
+        
         <div id="flash-overlay"></div>
 
-        <header class="game-header">
-            <div class="header-left">
-                <span class="stage-tag">ETAPA <span id="stage-num">1</span></span>
+        <header>
+            <div class="header-info">
+                <div class="stage-badge">STAGE <span id="stage-num">1</span></div>
+                <div id="boss-timer" style="display:none">⏱️ <span id="time-left">30</span>s</div>
             </div>
-            <div class="gold-container">
-                <img src="https://cdn-icons-png.flaticon.com/512/272/272525.png" width="25">
-                <span id="gold-count">0</span>
+            <div class="currency-group">
+                <div class="res gold">🪙 <span id="gold">0</span></div>
+                <div class="res gems">💎 <span id="gems">0</span></div>
             </div>
         </header>
 
-        <section id="world">
-            <div id="enemy-ui">
-                <div class="hp-wrapper">
-                    <div id="hp-progress"></div>
+        <main id="battle-area">
+            <div class="enemy-header">
+                <div class="hp-bar-container">
+                    <div id="hp-fill"></div>
                     <span id="hp-text">100 / 100</span>
                 </div>
-                <h2 id="enemy-name">GUARDIÁN DE PIEDRA</h2>
+                <h2 id="enemy-name">GUARDIÁN FORESTAL</h2>
             </div>
 
-            <div id="battle-area">
-                <div id="pet-area">
-                    <div class="pet-entity" id="main-pet">🐉</div>
+            <div id="target-zone" onclick="handleTap(event)">
+                <img id="enemy-img" src="https://i.ibb.co/vzXq2C9/monster-placeholder.png">
+                <div id="damage-popups"></div>
+            </div>
+
+            <div id="player-squad">
+                <div class="pet-container">
+                    <img id="pet-img" src="https://i.ibb.co/mH7L6qB/egg.png">
+                    <small>PET</small>
                 </div>
-                <div id="boss-sprite" onclick="handleTap(event)">👿</div>
-                <div id="effects-layer"></div>
+                <div class="hero-container">
+                    <img id="hero-img" src="https://i.postimg.cc/qM7C4G4G/mage-idle.png">
+                    <small>MAESTRO</small>
+                </div>
             </div>
 
-            <div id="skills-bar">
-                <div class="skill-slot" onclick="activateSkill('frenzy')">🔥<div class="cooldown" id="cd-1"></div></div>
-                <div class="skill-slot" onclick="activateSkill('storm')">⚡<div class="cooldown" id="cd-2"></div></div>
+            <div id="loot-chest" onclick="openChest()" style="display:none">
+                <img src="https://i.postimg.cc/mD7Xz0D7/chest.png">
+                <div class="chest-glow"></div>
             </div>
-        </section>
+        </main>
 
-        <nav id="bottom-menu">
+        <section id="menu-panel">
             <div class="menu-tabs">
-                <button class="tab-btn active" onclick="switchTab('heroes')">HÉROE</button>
-                <button class="tab-btn" onclick="switchTab('pets')">MASCOTAS</button>
-                <button class="tab-btn" onclick="switchTab('stats')">STATS</button>
+                <button id="tab-up" class="active" onclick="switchTab('upgrades')">⚔️ FORJA</button>
+                <button id="tab-inv" onclick="switchTab('inventory')">🎒 EQUIPO</button>
             </div>
-            <div class="scroll-content" id="upgrade-list">
-                </div>
-        </nav>
+            <div id="menu-content" class="scroll-view"></div>
+        </section>
     </div>
     <script src="script.js"></script>
 </body>
-</html>
+    </html>
