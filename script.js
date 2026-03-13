@@ -1,40 +1,73 @@
-:root { --gold: #f39c12; --bg-dark: #121212; }
-body { margin: 0; background: #000; font-family: 'Arial Black', sans-serif; color: white; overflow: hidden; }
+let game = {
+    gold: 0,
+    stage: 1,
+    clickDmg: 5,
+    clickLv: 1,
+    upCost: 10
+};
 
-#game-container { height: 100vh; display: flex; flex-direction: column; }
+let enemy = {
+    hp: 50,
+    maxHp: 50
+};
 
-header { padding: 10px; background: rgba(0,0,0,0.8); text-align: center; border-bottom: 2px solid #333; }
-.gold-display { font-size: 1.5rem; color: var(--gold); }
-.stage-info { font-size: 0.8rem; color: #aaa; }
+const enemySprite = document.getElementById('enemy-sprite');
+const dmgContainer = document.getElementById('damage-numbers');
 
-#battle-field { flex: 1.2; position: relative; background: linear-gradient(to bottom, #1a1a2e, #16213e); overflow: hidden; }
+// Función principal de golpe
+enemySprite.addEventListener('mousedown', (e) => {
+    doDamage(game.clickDmg, e.clientX, e.clientY);
+});
 
-/* Barra de Vida estilo Tap Titans */
-#enemy-health-bar { width: 80%; height: 20px; background: #333; margin: 20px auto 5px; border-radius: 10px; border: 2px solid #fff; overflow: hidden; }
-#hp-progress { width: 100%; height: 100%; background: linear-gradient(to right, #e74c3c, #c0392b); transition: width 0.1s; }
+function doDamage(amount, x, y) {
+    enemy.hp -= amount;
+    game.gold += 1;
+    
+    // Animación de golpe
+    enemySprite.style.transform = "scale(0.9) translateY(10px)";
+    setTimeout(() => enemySprite.style.transform = "scale(1)", 50);
 
-#boss-container { height: 60%; display: flex; align-items: center; justify-content: center; position: relative; }
-#enemy-sprite { font-size: 120px; transition: transform 0.05s; z-index: 1; }
+    // Crear número flotante
+    const num = document.createElement('div');
+    num.className = 'dmg-num';
+    num.innerText = "-" + amount;
+    num.style.left = (x - 20) + "px";
+    num.style.top = (y - 50) + "px";
+    dmgContainer.appendChild(num);
+    setTimeout(() => num.remove(), 600);
 
-/* Números de Daño Animados */
-.dmg-num { position: absolute; color: white; font-weight: bold; font-size: 24px; pointer-events: none; animation: floatUp 0.6s ease-out forwards; z-index: 5; }
-@keyframes floatUp {
-    0% { transform: translateY(0); opacity: 1; }
-    100% { transform: translateY(-100px); opacity: 0; }
+    if(enemy.hp <= 0) {
+        nextEnemy();
+    }
+    updateUI();
 }
 
-#player-team { position: absolute; bottom: 10px; width: 100%; display: flex; justify-content: center; gap: 20px; font-size: 40px; }
+function nextEnemy() {
+    game.stage++;
+    enemy.maxHp = Math.floor(50 * Math.pow(1.2, game.stage));
+    enemy.hp = enemy.maxHp;
+    game.gold += game.stage * 5;
+    
+    // Cambiar emoji aleatoriamente
+    const icons = ["👿", "👹", "💀", "👽", "🐲"];
+    enemySprite.innerText = icons[Math.floor(Math.random()*icons.length)];
+}
 
-/* Panel de Mejoras */
-#upgrade-panel { flex: 1; background: #1e1e1e; border-top: 4px solid #333; display: flex; flex-direction: column; }
-.tab-menu { display: flex; background: #111; }
-.tab-menu button { flex: 1; padding: 10px; background: none; border: none; color: #666; font-size: 0.7rem; border-bottom: 2px solid transparent; }
-.tab-menu button.active { color: var(--gold); border-bottom: 2px solid var(--gold); }
+function upgradeClick() {
+    if(game.gold >= game.upCost) {
+        game.gold -= game.upCost;
+        game.clickLv++;
+        game.clickDmg += 5;
+        game.upCost = Math.floor(game.upCost * 1.5);
+        updateUI();
+    }
+}
 
-.upgrade-list { overflow-y: auto; padding: 10px; }
-.upgrade-item { display: flex; align-items: center; background: #2c3e50; padding: 10px; border-radius: 8px; margin-bottom: 8px; border: 1px solid #444; }
-.up-icon { font-size: 30px; margin-right: 15px; }
-.up-info { flex: 1; display: flex; flex-direction: column; }
-.up-name { font-size: 0.9rem; }
-.up-cost { color: var(--gold); font-size: 0.8rem; }
-.up-level { font-weight: bold; background: rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 5px; }
+function updateUI() {
+    document.getElementById('gold-count').innerText = game.gold;
+    document.getElementById('stage-num').innerText = game.stage;
+    document.getElementById('hp-progress').style.width = (enemy.hp / enemy.maxHp * 100) + "%";
+    document.getElementById('click-lv').innerText = game.clickLv;
+    document.getElementById('up-cost-val').innerText = game.upCost;
+    document.getElementById('enemy-name').innerText = "ENEMIGO NIV. " + game.stage;
+}
